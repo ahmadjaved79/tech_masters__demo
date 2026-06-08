@@ -1,0 +1,6 @@
+{
+  "name": "Academy of Tech Masters",
+  "description": "High-converting, modern EdTech landing page for the DSA using Python Workshop by Academy of Tech Masters.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
