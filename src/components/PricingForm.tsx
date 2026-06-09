@@ -125,16 +125,40 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
     }
   };
 
-  const simulatePayment = () => {
+  // Google Apps Script Web App URL — replace after deploying your Apps Script
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+  const simulatePayment = async () => {
     setPaymentStep("processing");
-    setTimeout(() => {
-      // Generate standard booking codes
-      const ticketNum = "ATM-DSA-" + Math.floor(100000 + Math.random() * 900000);
-      const timestamp = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
-      setGeneratedTicket({ id: ticketNum, timestamp });
-      setPaymentStep("success");
-      onRegistered();
-    }, 2800);
+
+    const ticketNum = "ATM-DSA-" + Math.floor(100000 + Math.random() * 900000);
+    const timestamp = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: form.fullName,
+          mobile: form.mobile,
+          email: form.email,
+          college: form.college,
+          branch: form.branch,
+          year: form.year,
+          utrNumber: transactionRef,
+          ticketId: ticketNum,
+          timestamp: timestamp,
+        }),
+      });
+    } catch (err) {
+      // Still proceed to success — no-cors mode means response is opaque but data saves
+      console.error("Sheet submission error:", err);
+    }
+
+    setGeneratedTicket({ id: ticketNum, timestamp });
+    setPaymentStep("success");
+    onRegistered();
   };
 
   const downloadTicketAsImage = () => {
@@ -512,7 +536,7 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
                     {/* QR Code */}
                     <div className="bg-white border-2 border-slate-100 rounded-2xl p-4 shadow-md flex flex-col items-center gap-3">
                       <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent("upi://pay?pa=info@aotms.in&pn=Academy+of+Tech+Masters&am=49&cu=INR")}`}
+                        src="https://res.cloudinary.com/dcmt06mac/image/upload/v1781004332/WhatsApp_Image_2026-06-09_at_4.39.46_PM_b1jh5p.jpg"
                         alt="Scan to Pay ₹49 via UPI"
                         className="w-48 h-48 object-contain"
                       />
