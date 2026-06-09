@@ -11,7 +11,7 @@ export default function Logo({ className = "" }: LogoProps) {
         src="https://res.cloudinary.com/dcmt06mac/image/upload/v1780998283/aotms_logo-2_v8fs1e.jpg"
         alt="Academy of Tech Masters Logo"
         className="h-22 w-auto object-contain"
-        style={{ maxWidth: "350px" }}
+        style={{ maxWidth: "300px" }}
       />
     </div>
   );
