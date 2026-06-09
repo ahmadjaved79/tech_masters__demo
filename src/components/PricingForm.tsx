@@ -4,7 +4,6 @@ import {
   Timer, 
   Users, 
   Lock, 
-  Smartphone, 
   Mail, 
   User, 
   School, 
@@ -13,17 +12,12 @@ import {
   CheckCircle, 
   Download, 
   QrCode, 
-  TrendingUp, 
   ArrowRight,
   ShieldCheck,
-  ExternalLink,
-  MessageSquare,
-  BookmarkCheck,
   Flame,
-  Award,
   Copy,
-  Upload,
-  Check
+  Check,
+  X
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { RegistrationData } from "../types";
@@ -52,7 +46,6 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
   const [generatedTicket, setGeneratedTicket] = useState<{ id: string; timestamp: string } | null>(null);
   const [transactionRef, setTransactionRef] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const [screenshotName, setScreenshotName] = useState<string>("");
   const [refError, setRefError] = useState("");
 
   // Dynamic countdown target (Sunday, June 14, 2026, 18:00:00 IST)
@@ -450,11 +443,11 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
 
       </div>
 
-      {/* ================= SIMULATED PAYMENT DEEP CHECKOUT GATEWAY MODAL ================= */}
+      {/* ================= PAYMENT MODAL ================= */}
       <AnimatePresence>
         {isCheckoutOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {/* Backdrop cover */}
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -465,73 +458,75 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
                 }
               }}
               className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
-            ></motion.div>
+            />
 
-            {/* Modal Body */}
+            {/* Modal */}
             <motion.div
               initial={{ scale: 0.95, y: 15, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.95, y: 15, opacity: 0 }}
-              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl border border-slate-100 relative z-10"
+              className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl border border-slate-100 relative z-10"
             >
-              
-              {/* BRAND CARD HEADER */}
-              <div className="bg-gradient-to-r from-[#1565C0] to-blue-700 text-white p-5 text-left flex items-center justify-between">
-                <div>
-                  <h4 className="font-display font-extrabold text-base uppercase tracking-tight leading-none text-white">
-                    ACADEMY OF TECH MASTERS
-                  </h4>
-                  <span className="text-[10px] uppercase font-mono tracking-widest text-blue-100 mt-1 block">
-                    FAST_PAY_UPI_GATEWAY v2.8
-                  </span>
+
+              {/* Header with logo */}
+              <div className="bg-gradient-to-r from-[#1565C0] to-blue-700 text-white p-5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <img
+                    src="https://res.cloudinary.com/dcmt06mac/image/upload/v1780993565/WhatsApp_Image_2026-06-09_at_1.55.11_PM_jgb2ym.jpg"
+                    alt="Academy of Tech Masters"
+                    className="h-10 w-auto rounded-lg bg-white p-1 shrink-0"
+                  />
+                  <div>
+                    <h4 className="font-display font-extrabold text-sm uppercase tracking-tight leading-none text-white">
+                      Academy of Tech Masters
+                    </h4>
+                    <span className="text-[10px] text-blue-200 font-mono mt-0.5 block">
+                      {paymentStep === "success" ? "Registration Confirmed" : "Complete Your Payment"}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-[10px] text-blue-200 uppercase font-mono block">Grand Total:</span>
-                  <span className="font-display font-extrabold text-xl text-orange-400">₹49.00</span>
-                </div>
+                {paymentStep !== "processing" && (
+                  <button
+                    type="button"
+                    onClick={() => setIsCheckoutOpen(false)}
+                    className="p-1.5 bg-white/10 hover:bg-white/20 rounded-full transition-colors shrink-0"
+                    aria-label="Close"
+                  >
+                    <X className="w-4 h-4 text-white" />
+                  </button>
+                )}
               </div>
 
-              {/* INTERACTIVE PAY STEPS RENDER */}
               <div className="p-6 sm:p-8">
-                
+
+                {/* ---- QR STEP ---- */}
                 {paymentStep === "qr" && (
-                  <div className="flex flex-col items-center">
-                    
-                    <div className="flex items-center gap-1.5 bg-[#1565C0]/10 text-[#1565C0] border border-[#1565C0]/20 py-1.5 px-3 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4 animate-pulse">
-                      <Timer className="w-3.5 h-3.5 text-[#1565C0] animate-spin" />
-                      <span>Pending: Complete UPI Payment in 10:00 Mins</span>
+                  <div className="flex flex-col items-center gap-5">
+
+                    {/* Amount badge */}
+                    <div className="flex items-center gap-2 bg-orange-50 border border-orange-200 px-4 py-2 rounded-full">
+                      <span className="text-[#FF6B00] font-extrabold text-lg font-display">₹49</span>
+                      <span className="text-slate-400 text-xs font-medium">— DSA Using Python Workshop</span>
                     </div>
 
-                    {/* QR Code Graphic Frame matching user uploaded template layout */}
-                    <div className="flex items-stretch gap-4 p-4 sm:p-5 border border-slate-200 rounded-3xl bg-slate-50 mb-4 select-none w-full max-w-sm shadow-inner relative justify-center">
-                      <div className="flex items-center justify-center">
-                        {/* Vertical Merchant Identifier Text - Rotated vertically matching the user screenshot */}
-                        <div className="text-[10px] sm:text-xs font-mono font-bold text-slate-800 tracking-widest uppercase [writing-mode:vertical-lr] rotate-180 shrink-0 border-r border-slate-200 pr-2 select-none h-full h-32 flex items-center justify-center">
-                          3200958 104 290325
-                        </div>
-                      </div>
-
-                      {/* Official QR scannable merchant block */}
-                      <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-3.5 relative flex flex-col items-center justify-center grow">
-                        <img 
-                          src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi%3A%2F%2Fpay%3Fpa%3Dinfo%40aotms.in%26pn%3DAcademy%2520of%2520Tech%2520Masters%26am%3D49%26cu%3DINR"
-                          alt="Academy of Tech Masters UPI QR Code Scanner"
-                          title="Scan this secure QR code using GPay, PhonePe, Bhim, or Paytm to register instantly."
-                          className="w-40 h-40 object-contain selection:bg-transparent"
-                          referrerPolicy="no-referrer"
-                        />
-                        <div className="mt-1 flex items-center gap-1 bg-slate-100 py-1 px-2.5 rounded-md text-[9px] font-semibold text-slate-500 uppercase tracking-widest font-mono">
-                          <QrCode className="w-3 h-3 text-slate-400" />
-                          <span>MEMBER SCANNER</span>
-                        </div>
+                    {/* QR Code */}
+                    <div className="bg-white border-2 border-slate-100 rounded-2xl p-4 shadow-md flex flex-col items-center gap-3">
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent("upi://pay?pa=info@aotms.in&pn=Academy+of+Tech+Masters&am=49&cu=INR")}`}
+                        alt="Scan to Pay ₹49 via UPI"
+                        className="w-48 h-48 object-contain"
+                      />
+                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest bg-slate-50 border border-slate-100 px-3 py-1 rounded-lg">
+                        <QrCode className="w-3.5 h-3.5 text-slate-400" />
+                        Scan via GPay · PhonePe · Paytm
                       </div>
                     </div>
 
-                    {/* Manual copy assistance for mobile users - Premium UX feature */}
-                    <div className="w-full max-w-sm mb-5 bg-slate-50 border border-slate-150 p-3 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-                      <div className="text-left font-sans">
-                        <span className="text-[9px] text-slate-400 font-mono block uppercase">Merchant UPI VPA</span>
-                        <code className="text-xs sm:text-sm font-bold font-mono text-slate-800">info@aotms.in</code>
+                    {/* UPI ID copy row */}
+                    <div className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between gap-3">
+                      <div>
+                        <span className="text-[9px] text-slate-400 font-mono uppercase block">UPI ID</span>
+                        <code className="text-sm font-bold font-mono text-slate-800">info@aotms.in</code>
                       </div>
                       <button
                         type="button"
@@ -540,99 +535,47 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
                           setIsCopied(true);
                           setTimeout(() => setIsCopied(false), 2000);
                         }}
-                        className="cursor-pointer bg-slate-900 text-white font-sans text-[10px] uppercase font-bold py-1.5 px-3 rounded-lg hover:bg-slate-850 flex items-center justify-center gap-1 transition-all"
+                        className="cursor-pointer bg-slate-900 text-white text-[10px] uppercase font-bold py-1.5 px-3 rounded-lg flex items-center gap-1 transition-all hover:bg-slate-700 shrink-0"
                       >
                         {isCopied ? (
-                          <>
-                            <Check className="w-3 h-3 text-emerald-400" />
-                            <span>Copied!</span>
-                          </>
+                          <><Check className="w-3 h-3 text-emerald-400" /><span>Copied!</span></>
                         ) : (
-                          <>
-                            <Copy className="w-3 h-3 text-slate-400" />
-                            <span>Copy UPI ID</span>
-                          </>
+                          <><Copy className="w-3 h-3 text-slate-400" /><span>Copy UPI ID</span></>
                         )}
                       </button>
                     </div>
 
-                    {/* PAYMENT CONFIRMATION VERIFICATION MODULES */}
-                    <div className="w-full uppercase text-left tracking-wide mb-4">
-                      <span className="text-[10px] text-slate-500 font-mono font-bold block mb-2">
-                        Verification Panel (Mandatory to unlock Pass)
-                      </span>
-                      
-                      <div className="space-y-3 font-sans">
-                        {/* Transaction reference ID */}
-                        <div>
-                          <label className="text-[10px] text-slate-600 font-bold block mb-1">
-                            UPI Transaction Ref / UTR Number (12 Digits)*
-                          </label>
-                          <input
-                            type="text"
-                            maxLength={12}
-                            value={transactionRef}
-                            onChange={(e) => {
-                              const val = e.target.value.replace(/\D/g, ""); // replace non-digits
-                              setTransactionRef(val);
-                              if (val.trim().length >= 8) {
-                                setRefError("");
-                              }
-                            }}
-                            placeholder="e.g. 518388902012"
-                            className={`w-full bg-slate-50 border ${refError ? 'border-red-400 ring-2 ring-red-100' : 'border-slate-200'} focus:bg-white focus:border-[#1565C0] focus:ring-4 focus:ring-blue-100 p-2.5 px-3 rounded-xl text-xs sm:text-sm font-mono font-semibold transition-all outline-none`}
-                          />
-                          {refError && (
-                            <p className="text-[10px] text-red-500 font-bold mt-1 tracking-normal font-sans">
-                              {refError}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* File Upload screenshot input */}
-                        <div>
-                          <label className="text-[10px] text-slate-600 font-bold block mb-1">
-                            Attach Payment Receipt / Screenshot
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              id="payment-screenshot"
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  setScreenshotName(e.target.files[0].name);
-                                }
-                              }}
-                              className="hidden"
-                            />
-                            <label
-                              htmlFor="payment-screenshot"
-                              className="w-full cursor-pointer bg-slate-50 hover:bg-slate-100 border border-slate-200 border-dashed hover:border-slate-350 p-2.5 px-3.5 rounded-xl text-xs font-semibold text-slate-650 flex items-center justify-between gap-1 transition-all"
-                            >
-                              <span className="truncate max-w-[200px] font-sans">
-                                {screenshotName || "Choose secure payment receipt image..."}
-                              </span>
-                              <div className="bg-white border border-slate-200 p-1 rounded-md text-slate-500 shrink-0 shadow-sm flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider">
-                                <Upload className="w-3.5 h-3.5 text-slate-400" />
-                                <span>browse</span>
-                              </div>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
+                    {/* UTR Input */}
+                    <div className="w-full space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 block">
+                        UTR / Transaction Reference Number <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        maxLength={12}
+                        value={transactionRef}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, "");
+                          setTransactionRef(val);
+                          if (val.trim().length >= 8) setRefError("");
+                        }}
+                        placeholder="e.g. 518388902012"
+                        className={`w-full bg-slate-50 border ${refError ? "border-red-400 ring-2 ring-red-100" : "border-slate-200"} focus:bg-white focus:border-[#1565C0] focus:ring-2 focus:ring-blue-100 p-3 px-4 rounded-xl text-sm font-mono font-semibold transition-all outline-none`}
+                      />
+                      {refError && (
+                        <p className="text-[11px] text-red-500 font-medium">{refError}</p>
+                      )}
+                      <p className="text-[10px] text-slate-400">
+                        Found in your UPI app under payment history after successful payment.
+                      </p>
                     </div>
 
-                    <p className="text-[10px] text-slate-500 font-medium text-center max-w-sm mb-4 leading-relaxed tracking-normal font-sans">
-                      Open Google Pay, PhonePe, Paytm, or your banking application, scan the official merchant QR above, pay ₹49, and submit the verification form.
-                    </p>
-
-                    {/* Control handles */}
-                    <div className="flex gap-3 w-full border-t border-slate-100 pt-4 mt-2">
+                    {/* Action buttons */}
+                    <div className="flex gap-3 w-full pt-1">
                       <button
                         type="button"
                         onClick={() => setIsCheckoutOpen(false)}
-                        className="cursor-pointer border border-slate-200 hover:bg-slate-100 py-3 rounded-xl text-xs font-bold text-slate-500 uppercase transition-all px-4"
+                        className="cursor-pointer border border-slate-200 hover:bg-slate-50 py-3 rounded-xl text-xs font-bold text-slate-500 uppercase transition-all px-5"
                       >
                         Cancel
                       </button>
@@ -640,134 +583,114 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
                         type="button"
                         onClick={() => {
                           if (!transactionRef.trim()) {
-                            setRefError("UPI reference / UTR number is required for transaction verification.");
+                            setRefError("UTR / Transaction reference number is required.");
                             return;
                           }
                           if (transactionRef.trim().length < 8) {
-                            setRefError("Reference number must be between 8 and 12 digits.");
+                            setRefError("Reference number must be at least 8 digits.");
                             return;
                           }
                           setRefError("");
                           simulatePayment();
                         }}
-                        className="cursor-pointer flex-1 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-[#FF6B00] hover:to-orange-600 text-white font-sans font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-md shadow-emerald-500/10 flex items-center justify-center gap-1.5"
+                        className="cursor-pointer flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-[#1565C0] hover:to-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
                       >
                         <ShieldCheck className="w-4 h-4" />
-                        I Have Made Payment
+                        Submit &amp; Confirm Seat
                       </button>
                     </div>
 
                   </div>
                 )}
 
+                {/* ---- PROCESSING STEP ---- */}
                 {paymentStep === "processing" && (
-                  <div className="flex flex-col items-center py-10">
-                    {/* Circle Loader */}
-                    <div className="relative mb-6">
-                      <div className="w-16 h-16 rounded-full border-4 border-slate-100 border-t-orange-500 animate-spin"></div>
-                      <QrCode className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-slate-400" />
+                  <div className="flex flex-col items-center py-10 gap-4">
+                    <div className="relative">
+                      <div className="w-16 h-16 rounded-full border-4 border-slate-100 border-t-[#1565C0] animate-spin"></div>
+                      <ShieldCheck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-[#1565C0]" />
                     </div>
-                    
                     <h5 className="font-display font-extrabold text-[#1565C0] text-sm tracking-wide uppercase">
-                      Vefifying UPI Ref reference...
+                      Verifying your payment...
                     </h5>
-                    
-                    <p className="text-slate-400 text-[11px] font-mono mt-2.5 max-w-xs text-center leading-relaxed">
-                      Ping transaction ledger inside Paytm bank servers. Do not refresh or exit.
+                    <p className="text-slate-400 text-[11px] font-mono text-center leading-relaxed max-w-xs">
+                      Please do not close or refresh this window.
                     </p>
                   </div>
                 )}
 
+                {/* ---- SUCCESS STEP ---- */}
                 {paymentStep === "success" && generatedTicket && (
-                  <div className="flex flex-col text-left">
-                    
-                    <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl p-4 flex gap-3.5 items-start mb-6">
-                      <div className="bg-emerald-600 p-1.5 rounded-lg text-white">
-                        <CheckCircle className="w-5 h-5 fill-emerald-700 text-white" />
+                  <div className="flex flex-col gap-5">
+
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex gap-3 items-start">
+                      <div className="bg-emerald-600 p-1.5 rounded-lg text-white shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
                       </div>
                       <div>
-                        <h6 className="font-bold text-sm tracking-normal">Registration Confirmed Successfully!</h6>
+                        <h6 className="font-bold text-sm text-emerald-800">Registration Confirmed!</h6>
                         <p className="text-slate-500 text-[11px] leading-relaxed mt-0.5">
-                          Fantastic, Rahul! Your private digital admission pass has been generated. A backup confirmation has been forwarded to <strong className="text-[#1565C0]">{form.email}</strong>.
+                          A confirmation has been sent to <strong className="text-[#1565C0]">{form.email}</strong>. Your seat is reserved.
                         </p>
                       </div>
                     </div>
 
-                    {/* PRINTABLE PASS CARD */}
-                    <div id="printpass" className="rounded-2xl border-2 border-blue-100 bg-gradient-to-b from-blue-50/50 to-white overflow-hidden p-5 shadow-sm relative mb-6">
-                      
-                      {/* Ticket header */}
-                      <div className="flex items-start justify-between border-b border-slate-150 pb-4 mb-4">
+                    {/* Ticket card */}
+                    <div id="printpass" className="rounded-2xl border-2 border-blue-100 bg-gradient-to-b from-blue-50/50 to-white p-5 shadow-sm">
+                      <div className="flex items-start justify-between border-b border-slate-100 pb-3 mb-4">
                         <div>
-                          <span className="text-[9px] uppercase font-mono tracking-widest text-[#FF6B00] font-bold">ADMISSION WRISTBAND</span>
-                          <h5 className="font-display font-bold text-sm text-slate-900 mt-1">DSA WITH PYTHON WORKSHOP</h5>
+                          <span className="text-[9px] uppercase font-mono tracking-widest text-[#FF6B00] font-bold">Admission Pass</span>
+                          <h5 className="font-display font-bold text-sm text-slate-900 mt-0.5">DSA With Python Workshop</h5>
                           <div className="flex items-center gap-1 text-[10px] text-slate-500 font-mono mt-1">
                             <Calendar className="w-3.5 h-3.5 text-blue-600" />
                             <span>Sunday, June 14 @ 6:00 PM</span>
                           </div>
                         </div>
-                        <div className="bg-[#1565C0] text-white rounded p-1 font-display font-bold text-xs uppercase leading-tight text-center">
+                        <div className="bg-[#1565C0] text-white rounded-lg px-2 py-1 font-display font-bold text-xs uppercase text-center leading-tight">
                           ATM<br /><span className="text-[9px]">2026</span>
                         </div>
                       </div>
-
-                      {/* Attendee data */}
-                      <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs mb-5">
+                      <div className="grid grid-cols-2 gap-3 text-xs mb-4">
                         <div>
-                          <span className="text-slate-400 font-mono text-[9px] uppercase block">NAME</span>
-                          <span className="font-bold text-slate-800 truncate block">{form.fullName || " राहुल कुमार "}</span>
+                          <span className="text-slate-400 font-mono text-[9px] uppercase block">Name</span>
+                          <span className="font-bold text-slate-800 truncate block">{form.fullName}</span>
                         </div>
                         <div>
-                          <span className="text-slate-400 font-mono text-[9px] uppercase block">TICKET ID</span>
+                          <span className="text-slate-400 font-mono text-[9px] uppercase block">Ticket ID</span>
                           <span className="font-bold font-mono text-blue-700 block">{generatedTicket.id}</span>
                         </div>
                         <div>
-                          <span className="text-slate-400 font-mono text-[9px] uppercase block">COLLEGE / UNIV</span>
+                          <span className="text-slate-400 font-mono text-[9px] uppercase block">College</span>
                           <span className="font-medium text-slate-600 truncate block">{form.college}</span>
                         </div>
                         <div>
-                          <span className="text-slate-400 font-mono text-[9px] uppercase block">PHONE NO</span>
+                          <span className="text-slate-400 font-mono text-[9px] uppercase block">Mobile</span>
                           <span className="font-mono text-slate-600 font-medium block">+91 {form.mobile}</span>
                         </div>
                       </div>
-
-                      {/* ZOOM JOINING INFORMS */}
-                      <div className="bg-slate-950 text-slate-100 p-3 rounded-xl border border-slate-800 text-[11px] font-mono mb-4 text-left">
+                      <div className="bg-slate-950 text-slate-100 p-3 rounded-xl text-[11px] font-mono">
                         <div className="flex items-center gap-1.5 text-orange-400 font-bold text-[10px] uppercase mb-1">
                           <Users className="w-3.5 h-3.5" />
-                          <span>Zoom Entry Credentials:</span>
+                          Zoom Entry Credentials
                         </div>
-                        <p className="mt-0.5">Meeting ID: <strong>812 902 4433</strong></p>
-                        <p className="mt-0.5">Room Passcode: <strong className="text-emerald-400">DSA_MASTER</strong></p>
+                        <p>Meeting ID: <strong>812 902 4433</strong></p>
+                        <p className="mt-0.5">Passcode: <strong className="text-emerald-400">DSA_MASTER</strong></p>
                       </div>
-
-                      {/* WhatsApp Community Link integration - typical high converting Indian EdTech element! */}
-                      <a
-                        href="https://chat.whatsapp.com/mock-atm-dsa-mastery"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="bg-emerald-600 text-white p-3 rounded-xl hover:bg-emerald-700 transition-colors text-xs font-bold flex items-center justify-center gap-2"
-                      >
-                        <MessageSquare className="w-4 h-4 fill-emerald-100" />
-                        Join Exclusive WhatsApp Group (Notes & PDFs)
-                      </a>
-
                     </div>
 
-                    {/* Bottom controls */}
-                    <div className="flex gap-4">
+                    <div className="flex gap-3">
                       <button
                         onClick={downloadTicketAsImage}
-                        className="cursor-pointer flex-1 border border-blue-200 hover:bg-blue-50 text-blue-800 text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl transition-all flex items-center justify-center gap-2"
+                        className="cursor-pointer flex-1 border border-blue-200 hover:bg-blue-50 text-blue-800 text-xs font-bold uppercase tracking-wider py-3 rounded-xl transition-all flex items-center justify-center gap-2"
                       >
                         <Download className="w-4 h-4" />
-                        Print Access Ticket
+                        Print Ticket
                       </button>
                       <button
                         onClick={() => setIsCheckoutOpen(false)}
-                        className="cursor-pointer flex-1 bg-slate-950 hover:bg-slate-900 text-white text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl transition-all"
+                        className="cursor-pointer flex-1 bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider py-3 rounded-xl transition-all"
                       >
-                        Close Dashboard
+                        Close
                       </button>
                     </div>
 
@@ -775,7 +698,6 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
                 )}
 
               </div>
-
             </motion.div>
           </div>
         )}

@@ -42,21 +42,10 @@ export default function Navbar({ seatsLeft }: NavbarProps) {
           {/* Logo / Brand */}
           <div 
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-2.5 cursor-pointer group select-none"
+            className="flex items-center cursor-pointer group select-none"
           >
             <div className="group-hover:scale-105 transition-transform shrink-0">
-              <Logo size={46} />
-            </div>
-            <div className="flex flex-col items-start justify-center">
-              <span className="font-display font-black text-base sm:text-[17px] tracking-tight leading-none">
-                <span className="text-[#1565C0]">ACADEMY OF</span> <span className="text-[#FF6B00]">TECH MASTERS</span>
-              </span>
-              {/* Thin horizontal line divider matching the uploaded logo */}
-              <div className="w-full h-[1px] bg-slate-300 mt-1 mb-0.5"></div>
-              <div className="text-[8px] sm:text-[9px] uppercase tracking-[0.08em] font-extrabold font-sans leading-none flex items-center gap-1">
-                <span className="text-[#FF6B00]">LEARN TODAY,</span>
-                <span className="text-[#1565C0]">LEAD TOMORROW</span>
-              </div>
+              <Logo />
             </div>
           </div>
 
