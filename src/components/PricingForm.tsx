@@ -549,7 +549,7 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
                     {/* UPI ID copy row */}
                     <div className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between gap-3">
                       <div>
-                        <span className="text-[9px] text-slate-400 font-mono uppercase block">UPI ID</span>
+                        <span className="text-[9px] text-slate-400 font-mono uppercase block">Mail ID</span>
                         <code className="text-sm font-bold font-mono text-slate-800">info@aotms.in</code>
                       </div>
                       <button
@@ -564,7 +564,7 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
                         {isCopied ? (
                           <><Check className="w-3 h-3 text-emerald-400" /><span>Copied!</span></>
                         ) : (
-                          <><Copy className="w-3 h-3 text-slate-400" /><span>Copy UPI ID</span></>
+                          <><Copy className="w-3 h-3 text-slate-400" /><span>Copy mail ID</span></>
                         )}
                       </button>
                     </div>
