@@ -126,7 +126,7 @@ export default function PricingForm({ seatsLeft, onRegistered }: PricingFormProp
   };
 
   // Google Apps Script Web App URL — replace after deploying your Apps Script
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmHx312Tp2Ss8sLHmCtHhEuNpch7lJlrTQdrNMtq7ukcvY-35qEjfjbSvdSNxyvtN-Lg/exec";
 
   const simulatePayment = async () => {
     setPaymentStep("processing");
